@@ -28,6 +28,8 @@
 
 ### Lesson 2
 
+### Linear Regression
+
 * Linear Regression
     * Draw the best fitting line to it
 
@@ -178,4 +180,333 @@
             return W_new, b_new
             ```
 
+    * Linear Regression with scikit-learn
 
+        * In this section, you'll use linear regression to predict life expectancy from body mass index (BMI). Before you do that, let's go over the tools required to build this model.
+
+        * For your linear regression model, you'll be using scikit-learn's LinearRegression class. This class provides the function fit() to fit the model to your data.
+
+        * ```python
+            >>> from sklearn.linear_model import LinearRegression
+            >>> model = LinearRegression()
+            >>> model.fit(x_values, y_values)
+            ```
+
+        * Fitting the model means finding the best line that fits the training data. Let's make two predictions using the model's predict() function.
+
+        * ```python
+            >>> print(model.predict([ [127], [248] ]))
+            [[ 438.94308857, 127.14839521]]
+            ```
+
+        * The model returned an array of predictions, one prediction for each input array. The first input, [127], got a prediction of 438.94308857. The second input, [248], got a prediction of 127.14839521. The reason for predicting on an array like [127] and not just 127, is because you can have a model that makes a prediction using multiple features. We'll go over using multiple variables in linear regression later in this lesson. For now, let's stick to a single value.
+
+        * ```python
+            # TODO: Add import statements
+            import pandas as pd
+            from sklearn.linear_model import LinearRegression
+
+            # Assign the dataframe to this variable.
+            # TODO: Load the data
+            bmi_life_data = pd.read_csv("bmi_and_life_expectancy.csv")
+
+            # Make and fit the linear regression model
+            #TODO: Fit the model and Assign it to bmi_life_model
+            bmi_life_model = LinearRegression()
+            bmi_life_model.fit(bmi_life_data[['BMI']], bmi_life_data[['Life expectancy']])
+
+            # Mak a prediction using the model
+            # TODO: Predict life expectancy for a BMI value of 21.07931
+            laos_life_exp = bmi_life_model.predict(21.07931)
+            ```
+        
+    * Multiple Linear Regression
+
+        * In the last section, you saw how we can predict life expectancy using BMI. Here, BMI was the predictor, also known as an independent variable. A predictor is a variable you're looking at in order to make predictions about other variables, while the values you are trying to predict are known as dependent variables. In this case, life expectancy was the dependent variable.
+
+        * Now, let’s say we get new data on each person’s heart rate as well. Can we create a prediction of life expectancy using both BMI and heart rate?
+
+        * Absolutely! As we saw in the previous video, we can do that using multiple linear regression.
+
+        * If the outcome you want to predict depends on more than one variable, you can make a more complicated model that takes this into account. As long as they're relevant to the situation, using more independent/predictor variables can help you get a better prediction.
+
+        * When there's just one predictor, the linear regression model is a line, but as you add more predictor variables, you're adding more dimensions to the picture.
+
+        * When you have one predictor variable, the equation of the line is
+
+        * y = mx + b
+
+        * and the plot might look something like this:
+
+        * ![multi_linear](./images/multi_linear.png) 
+
+        * Adding a predictor variable to go to two predictor variables means that the predicting equation is:
+
+        * y = m_1 x_1 + m_2 x_2 + b
+
+        * To represent this graphically, we'll need a three-dimensional plot, with the linear regression model represented as a plane:
+
+        * ![multi_linear_1](./images/multi_linear_1.png) 
+
+        * You can use more than two predictor variables - in fact, you should use as many as is useful! If you use nn predictor variables, then the model can be represented by the equation
+
+        * y=m1x1+ m2x2 +m3x3+ ... + mnxn +b
+
+        * As you make a model with more predictor variables, it becomes harder to visualise, but luckily, everything else about linear regression stays the same. We can still fit models and make predictions in exactly the same way - time to try it!
+
+        * ```python
+            from sklearn.linear_model import LinearRegression
+            from sklearn.datasets import load_boston
+
+            # Load the data from the boston house-prices dataset 
+            boston_data = load_boston()
+            x = boston_data['data']
+            y = boston_data['target']
+
+            # Make and fit the linear regression model
+            # TODO: Fit the model and Assign it to the model variable
+            model = LinearRegression()
+            model.fit(x, y)
+
+            # Make a prediction using the model
+            sample_house = [[2.29690000e-01, 0.00000000e+00, 1.05900000e+01, 0.00000000e+00, 4.89000000e-01,
+                            6.32600000e+00, 5.25000000e+01, 4.35490000e+00, 4.00000000e+00, 2.77000000e+02,
+                            1.86000000e+01, 3.94870000e+02, 1.09700000e+01]]
+            # TODO: Predict housing price for the sample_house
+            prediction = model.predict(sample_house)
+            ```
+
+    * Linear Regression Warnings
+
+        * Linear regression comes with a set of implicit assumptions and is not the best model for every situation. Here are a couple of issues that you should watch out for.
+
+        * **Linear Regression Works Best When the Data is Linear**
+
+        * Linear regression produces a straight line model from the training data. If the relationship in the training data is not really linear, you'll need to either make adjustments (transform your training data), add features (we'll come to this next), or use another kind of model.
+
+        * ![linear_regression_pitfalls](./images/linear_regression_pitfalls.png) 
+
+
+        * Linear Regression is Sensitive to Outliers
+
+        * Linear regression tries to find a 'best fit' line among the training data. If your dataset has some outlying extreme values that don't fit a general pattern, they can have a surprisingly large effect.
+
+        * In this first plot, the model fits the data pretty well.
+
+        * ![linear_regression_pitfalls1](./images/linear_regression_pitfalls1.png) 
+
+        * However, adding a few points that are outliers and don't fit the pattern really changes the way the model predicts.
+
+        * ![linear_regression_pitfalls2](./images/linear_regression_pitfalls2.png)
+
+* Polynomial Regression
+
+    * ![polynomial_regression](./images/polynomial_regression.png)
+
+        * In order to represent this line we will need a polynomial equation
+
+        * This will work the same way as the Linear Regression, but with more weights 
+
+        * ![polynomial_regression_1](./images/polynomial_regression_1.png)
+
+        * The algorithm is the same thing, we take the mean absolute error or mean squared error, and take the derivative to the respect of the 4 variables and use gradient descent to modified this 4 weights in order to minimize the error.
+    
+    * Get some practice implementing polynomial regression in this exercise. In data.csv, you can see data generated for one predictor feature ('Var_X') and one outcome feature ('Var_Y'), following a non-linear trend. Use sklearn's PolynomialFeatures class to extend the predictor feature column into multiple columns with polynomial features. Play around with different degrees of polynomial and the Test Run button to see what fits best: when you think you have the best-fitting degree, press the Submit button to check your work!
+
+    * ```python
+        # TODO: Add import statements
+        import numpy as np
+        import pandas as pd
+        from sklearn.linear_model import LinearRegression
+        from sklearn.preprocessing import PolynomialFeatures
+
+        # Assign the data to predictor and outcome variables
+        # TODO: Load the data
+        train_data = pd.read_csv('data.csv')
+        X = train_data['Var_X'].values.reshape(-1, 1)
+        y = train_data['Var_Y'].values
+
+        # Create polynomial features
+        # TODO: Create a PolynomialFeatures object, then fit and transform the
+        # predictor feature
+        poly_feat = PolynomialFeatures(degree = 4)
+        X_poly = poly_feat.fit_transform(X)
+
+        # Make and fit the polynomial regression model
+        # TODO: Create a LinearRegression object and fit it to the polynomial predictor
+        # features
+        poly_model = LinearRegression(fit_intercept = False).fit(X_poly, y)
+        ```
+    
+    * ![polynomial_regression_2](./images/polynomial_regression_2.png)
+
+* Regularization
+
+    * This concept works for both regression and classification
+
+    * ![regression_vs_classification](./images/regression_vs_classification.png)
+
+    * ![regression_vs_classification](./images/regression_vs_classification_1.png)
+
+    * If we train a model to minimize error we will elect the one in the right. However, this model is probably over fitting 
+
+    * ![regression_vs_classification](./images/regression_vs_classification_2.png) 
+
+    * The right solution has many more coefficients compared to the left one
+
+    * If we could add those coefficients as the "model complexity" chunk of our error that would be beneficial.
+
+    * ![regression_vs_classification](./images/regression_vs_classification_3.png) 
+
+    * Simple models has a tendency to generalize better, and that is what we want.
+
+    * ![l1_regularization](./images/l1_regularization.png)  
+
+        * L1 takes the coefficients and adds their absolute value to the error.
+    
+    * ![l1_regularization](./images/l1_regularization_1.png)   
+
+    * L2 regularization is similar, but here we add the squares of the coefficients.
+
+    * ![l2_regularization](./images/l2_regularization.png)
+    
+    * In order to determine how impactful model complexity is over the error, we introduce a new parameter lambda
+
+    * ![l1_l2_calibration](./images/l1_l2_calibration.png) 
+
+    * ![lambda_regularization](./images/lambda_regularization.png) 
+
+        * Small lambda = ok with more complex models
+        * Big lambda = sensitive to complex models
+    
+    * ![l1_vs_l2](./images/l1_vs_l2.png)
+
+    * ```python
+        # TODO: Add import statements
+        import numpy as np
+        import pandas as pd
+        from sklearn.linear_model import Lasso
+
+        # Assign the data to predictor and outcome variables
+        # TODO: Load the data
+        train_data = pd.read_csv('data.csv', header = None)
+        X = train_data.iloc[:,:-1]
+        y = train_data.iloc[:,-1]
+
+        # TODO: Create the linear regression model with lasso regularization.
+        lasso_reg = Lasso()
+
+        # TODO: Fit the model.
+        lasso_reg.fit(X, y)
+
+        # TODO: Retrieve and print out the coefficients from the regression model.
+        reg_coef = lasso_reg.coef_
+        print(reg_coef)
+        ```
+
+* Feature Scaling
+
+    * What is feature scaling? Feature scaling is a way of transforming your data into a common range of values. There are two common scalings:
+
+        * Standardizing
+        * Normalizing
+    
+    * Standardizing
+
+        * Standardizing is completed by taking each value of your column, subtracting the mean of the column, and then dividing by the standard deviation of the column. In Python, let's say you have a column in df called height. You could create a standardized height as:
+            * In statistics, the standard deviation is a measure of the amount of variation or dispersion of a set of values.[1] A low standard deviation indicates that the values tend to be close to the mean (also called the expected value) of the set, while a high standard deviation indicates that the values are spread out over a wider range.
+
+        * `df["height_standard"] = (df["height"] - df["height"].mean()) / df["height"].std()`
+
+        * This will create a new "standardized" column where each value is a comparison to the mean of the column, and a new, standardized value can be interpreted as the number of standard deviations the original height was from the mean. This type of feature scaling is by far the most common of all techniques (for the reasons discussed here, but also likely because of precedent).
+    
+
+    * Normalizing
+
+        * A second type of feature scaling that is very popular is known as normalizing. With normalizing, data are scaled between 0 and 1. Using the same example as above, we could perform normalizing in Python in the following way:
+
+        * ```python
+            df["height_normal"] = (df["height"] - df["height"].min()) / (df["height"].max() - df['height'].min())
+            ```
+    
+    * When Should I Use Feature Scaling?
+
+        * In many machine learning algorithms, the result will change depending on the units of your data. This is especially true in two specific cases:
+
+            * When your algorithm uses a distance-based metric to predict.
+
+            * When you incorporate regularization.
+
+        * Distance Based Metrics
+
+            * In future lessons, you will see one common supervised learning technique that is based on the distance points are from one another called Support Vector Machines (or SVMs). Another technique that involves distance based methods to determine a prediction is k-nearest neighbors (or k-nn). With either of these techniques, choosing not to scale your data may lead to drastically different (and likely misleading) ending predictions.
+
+            * For this reason, choosing some sort of feature scaling is necessary with these distance based techniques.  
+        
+        * Regularization
+
+            * When you start introducing regularization, you will again want to scale the features of your model. The penalty on particular coefficients in regularized linear regression techniques depends largely on the scale associated with the features. When one feature is on a small range, say from 0 to 10, and another is on a large range, say from 0 to 1 000 000, applying regularization is going to unfairly punish the feature with the small range. Features with small ranges need to have larger coefficients compared to features with large ranges in order to have the same effect on the outcome of the data. (Think about how ab = baab=ba for two numbers aa and bb.) Therefore, if regularization could remove one of those two features with the same net increase in error, it would rather remove the small-ranged feature with the large coefficient, since that would reduce the regularization term the most.
+
+            * Again, this means you will want to scale features any time you are applying regularization.
+
+            * https://www.quora.com/Why-do-we-normalize-the-data
+
+            * A point raised in the article above is that feature scaling can speed up convergence of your machine learning algorithms, which is an important consideration when you scale machine learning applications.
+
+            * ```python
+                # TODO: Add import statements
+                import numpy as np
+                import pandas as pd
+                from sklearn.linear_model import Lasso
+                from sklearn.preprocessing import StandardScaler
+
+                # Assign the data to predictor and outcome variables
+                # TODO: Load the data
+                train_data = pd.read_csv('data.csv', header = None)
+                X = train_data.iloc[:,:-1]
+                y = train_data.iloc[:,-1]
+
+                # TODO: Create the standardization scaling object.
+                scaler = StandardScaler()
+
+                # TODO: Fit the standardization parameters and scale the data.
+                X_scaled = scaler.fit_transform(X)
+
+                # TODO: Create the linear regression model with lasso regularization.
+                lasso_reg = Lasso()
+
+                # TODO: Fit the model.
+                lasso_reg.fit(X_scaled, y)
+
+                # TODO: Retrieve and print out the coefficients from the regression model.
+                reg_coef = lasso_reg.coef_
+                print(reg_coef)
+                ```
+
+* Recap
+
+    * In this lesson, you were introduced to linear models. Specifically, you saw:
+
+    * **Gradient descent** as a method to optimize your linear models.
+    * **Multiple Linear Regression** as a technique for when you are comparing more than two variables.
+    * **Polynomial Regression** for relationships between variables that aren't linear.
+    * **Regularization** as a technique to assure that your models will not only fit to the data available, but also extend to new situations.
+
+### Perceptron Algorithm 
+
+* Perceptron Algorithm 
+
+    * For classification (matching values to labels), check the (AI Programming README)[https://github.com/danielmapar/AIProgramming]
+        * Neural Networks section
+
+### Decision Tress
+
+* Decision Trees
+
+    * Entropy
+
+        * This is a concept that comes from physics and it measures how much a particle can move.
+            * Example: water, gas and solid
+            * Solid has low entropy, gas has high entropy
+        
+        * ![entropy](./images/entropy.png)
