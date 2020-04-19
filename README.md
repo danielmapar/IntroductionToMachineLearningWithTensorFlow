@@ -509,4 +509,172 @@
             * Example: water, gas and solid
             * Solid has low entropy, gas has high entropy
         
-        * ![entropy](./images/entropy.png)
+        * Entropy also works in probability 
+
+            * ![entropy](./images/entropy.png)
+        
+        * The more homogeneous (less variaty), the less entropy 
+
+        * ![entropy1](./images/entropy1.png)
+            * The more knowledge one has, the less entropy it is
+        
+        * ![entropy2](./images/entropy2.png)
+
+        * ![entropy3](./images/entropy3.png)
+
+        * ![entropy4](./images/entropy4.png)
+
+        * ![entropy5](./images/entropy5.png)
+
+        * ![entropy6](./images/entropy6.png)
+
+        * ![entropy7](./images/entropy7.png)
+
+        * Instead of multiplying the probabilities, we will take their `log` (it is computationaly cheaper)
+
+        * `log(ab) = log(a) + log(b)`
+
+        * Since the `log` values are negative, we will make sure we take the negative `log` of those probabilities
+
+        * ![entropy8](./images/entropy8.png)
+
+        * 5 times the probability of red balls, plus 3 times the probability of blue balls
+
+        * ![entropy9](./images/entropy9.png)
+
+            * This is a general formula for entropy when we have 2 colors (2 types)
+        
+        * Last time, you saw this equation for entropy for a bucket with mm red balls and nn blue balls:
+
+            * ![entropy10](./images/entropy10.png) 
+        
+        * We can state this in terms of probabilities instead for the number of red balls as p_1 and the number of blue balls as p_2:
+
+            * ![entropy11](./images/entropy11.png)
+
+            * ![entropy12](./images/entropy12.png)
+        
+        * This entropy equation can be extended to the multi-class case, where we have three or more possible values:
+
+            * ![entropy13](./images/entropy13.png)
+        
+        * The minimum value is still 0, when all elements are of the same value. The maximum value is still achieved when the outcome probabilities are the same, but the upper limit increases with the number of different outcomes. (For example, you can verify the maximum entropy is 2 if there are four different possibilities, each with probability 0.25.)
+    
+    * Information Gain
+
+        * ![information_gain](./images/information_gain.png) 
+
+        * Information gain = Change in entropy
+
+        * ![information_gain1](./images/information_gain1.png)
+
+        * To calculate Information Gain we first check the entropy of the parent, then we subtracts by the average entropy of the children
+
+        * ![information_gain2](./images/information_gain2.png)
+
+        * ![information_gain3](./images/information_gain3.png)
+
+        * ![information_gain4](./images/information_gain4.png)
+            * Calculating entropy for the "app" property 
+
+        * ![information_gain6](./images/information_gain6.png)
+
+        * ![information_gain5](./images/information_gain5.png)
+
+            * The algorithm selects the column with highest information gain, in this case "Question"
+        
+        * ![information_gain7](./images/information_gain7.png)
+            * We can also use decision trees with continuos data
+    
+    * Hyperparameters for Decision Trees
+
+        * In order to create decision trees that will generalize to new problems well, we can tune a number of different aspects about the trees. We call the different aspects of a decision tree "hyperparameters". These are some of the most important hyperparameters used in decision trees:
+
+        * Maximum Depth
+
+            * The maximum depth of a decision tree is simply the largest possible length between the root to a leaf. A tree of maximum length kk can have at most 2^k2 k leaves.
+
+            * ![decision_tree_hp](./images/decision_tree_hp.png)
+        
+        * Minimum number of samples to split
+
+            * A node must have at least `min_samples_split` samples in order to be large enough to split. If a node has fewer samples than `min_samples_split` samples, it will not be split, and the splitting process stops.
+
+            * ![decision_tree_split](./images/decision_tree_split.png) 
+
+            * However, `min_samples_split` doesn't control the minimum size of leaves. As you can see in the example on the right, above, the parent node had 20 samples, greater than `min_samples_split = 11`, so the node was split. But when the node was split, a child node was created with that had 5 samples, less than `min_samples_split = 11`.
+        
+        * Minimum number of samples per leaf
+
+            * When splitting a node, one could run into the problem of having 99 samples in one of them, and 1 on the other. This will not take us too far in our process, and would be a waste of resources and time. If we want to avoid this, we can set a minimum for the number of samples we allow on each leaf.
+
+            * ![decision_tree_split](./images/decision_tree_split2.png) 
+
+            * This number can be specified as an integer or as a float. If it's an integer, it's the minimum number of samples allowed in a leaf. If it's a float, it's the minimum percentage of samples allowed in a leaf. For example, 0.1, or 10%, implies that a particular split will not be allowed if one of the leaves that results contains less than 10% of the samples in the dataset.
+
+            * If a threshold on a feature results in a leaf that has fewer samples than `min_samples_leaf`, the algorithm will not allow that split, but it may perform a split on the same feature at a different threshold, that does satisfy `min_samples_leaf`.
+
+        * Large depth very often causes overfitting, since a tree that is too deep, can memorize the data. Small depth can result in a very simple model, which may cause underfitting.
+        
+        * Small minimum samples per split may result in a complicated, highly branched tree, which can mean the model has memorized the data, or in other words, overfit. Large minimum samples may result in the tree not having enough flexibility to get built, and may result in underfitting.
+    
+    * Decision Trees in sklearn
+
+        * ```python
+            sklearn.tree import DecisionTreeClassifier
+            model = DecisionTreeClassifier()
+            model.fit(x_values, y_values)
+            ```
+        
+        * In the example above, the `model` variable is a decision tree model that has been fitted to the data `x_values` and `y_values`. Fitting the model means finding the best tree that fits the training data. Let's make two predictions using the model's predict() function.
+
+        * ```python
+            print(model.predict([ [0.2, 0.8], [0.5, 0.4] ]))
+            [[ 0., 1.]]
+            ```
+        
+        * The model returned an array of predictions, one prediction for each input array. The first input, `[0.2, 0.8]`, got a prediction of `0.`. The second input, `[0.5, 0.4]`, got a prediction of `1.`.
+    
+    * Hyperparameters
+
+        * When we define the model, we can specify the hyperparameters. In practice, the most common ones are
+
+            * `max_depth`: The maximum number of levels in the tree.
+            * `min_samples_leaf`: The minimum number of samples allowed in a leaf.
+            * `min_samples_split`: The minimum number of samples required to split an internal node.
+
+        * For example, here we define a model where the maximum depth of the trees `max_depth` is 7, and the minimum number of elements in each leaf `min_samples_leaf` is 10.
+
+            * `model = DecisionTreeClassifier(max_depth = 7, min_samples_leaf = 10)`
+    
+    * Decision Tree Quiz
+
+        * In this quiz, you'll be given the following sample dataset, and your goal is to define a model that gives 100% accuracy on it.
+
+        * ```python
+            # Import statements 
+            from sklearn.tree import DecisionTreeClassifier
+            from sklearn.metrics import accuracy_score
+            import pandas as pd
+            import numpy as np
+
+            # Read the data.
+            data = np.asarray(pd.read_csv('data.csv', header=None))
+            # Assign the features to the variable X, and the labels to the variable y. 
+            X = data[:,0:2]
+            y = data[:,2]
+
+            # TODO: Create the decision tree model and assign it to the variable model.
+            model = DecisionTreeClassifier()
+
+            # TODO: Fit the model.
+            model.fit(X,y)
+
+            # TODO: Make predictions. Store them in the variable y_pred.
+            y_pred = model.predict(X)
+
+            # TODO: Calculate the accuracy and assign it to the variable acc.
+            acc = accuracy_score(y, y_pred)
+            ```
+
+        * Note: This quiz requires you to find an accuracy of 100% on the training set. This is like memorizing the training data! A model designed to have 100% accuracy on training data is unlikely to generalize well to new data. If you pick very large values for your parameters, the model will fit the training set very well, but may not generalize well. Try to find the smallest possible parameters that do the job—then the model will be more likely to generalize well. (This aspect of the exercise won't be graded.)
