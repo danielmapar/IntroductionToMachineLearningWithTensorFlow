@@ -11,6 +11,7 @@
         * Categorical Outcomes
         * Any number of categories 
         * Type of Dog
+        * In statistics, the logistic model (or logit model) is used to model the probability of a certain class or event existing such as pass/fail, win/lose, alive/dead or healthy/sick. This can be extended to model several classes of events such as determining whether an image contains a cat, dog, lion, etc. Each object being detected in the image would be assigned a probability between 0 and 1 and the sum adding to one.farea_under_curve
 
     * Regression
         * Numeric Outcomes
@@ -1236,6 +1237,9 @@
 * Model Evaluation Metrics
 
 * How well is my model doing?
+
+* Classification 
+
     * ![metrics](./images/metrics1.png) 
 
     * ![metrics](./images/metrics2.png) 
@@ -1345,6 +1349,147 @@
             * F1 Score is the harmonic mean of precision and recall together 
 
             * ![metrics](./images/metrics21.png)
+    
+    * F-beta Score
 
+        * If F1 score is right in the middle, F-beta score will be either near precision or near recall.
 
+        * Larger beta = near to recall
 
+        * Smaller beta = near to precision
+
+        * ![metrics](./images/metrics22.png)
+
+        * An example of F-beta calibration is the credit card use case. If we use Recall we guarantee that we catch all fraudulent transactions. However, it will probably send incorrect notifications to clients that don't have any fraudulent transactions. That way we need to find a value of `beta` that evaluates if the model is covering a good number of fradulante cases without sending too many incorrect notification to "green" clients.  
+
+        * ![metrics](./images/metrics23.png) 
+    
+    * ROC (Receiver Operating Characteristics) Curve
+
+        * ![metrics](./images/metrics24.png)  
+
+        * On the right of the line we have positives, and the left contain negatives
+
+        * ![metrics](./images/metrics25.png)  
+
+        * ![metrics](./images/metrics26.png)  
+
+        * ![metrics](./images/metrics27.png)  
+
+        * ![metrics](./images/metrics28.png)  
+
+        * ![metrics](./images/metrics29.png)  
+
+        * ![metrics](./images/metrics30.png)  
+
+        * ![metrics](./images/metrics31.png)  
+
+            * The "perfect split" `(0,1)` when ploted in a graph generates an area of 1
+
+        * ![metrics](./images/metrics32.png)  
+
+            * If the model is random the area is about `0.5`
+        
+        * ![metrics](./images/metrics33.png)  
+
+* Regression    
+
+    * Mean Absolute Error
+
+        * ![metrics](./images/metrics34.png)
+    
+    * Mean Squared Error
+
+        * ![metrics](./images/metrics35.png)
+    
+    * R2 Score
+
+        * We get the error from the linear regression model and divide by the simple model, then we subtract by 1
+
+        * ![metrics](./images/metrics36.png) 
+
+        * If the R2 score is close to 1 the model is good, if it is close to 0 the model is not much better than guessing the average of the value of the points.
+
+        * ![metrics](./images/metrics37.png) 
+
+* Recap
+
+    In this lesson, you got a glimpse at the ways that we can measure how well our models are performing.
+
+    * Training & Testing Data
+
+        * First, it is important to always split your data into training and testing. Then you will measure how well your model performs on the test set of data after being fit training data.
+    
+    * Classification Measures
+
+        * If you are fitting your model to predict categorical data (spam not spam), there are different measures to understand how well your model is performing than if you are predicting numeric values (the price of a home).
+
+        * As we look at classification metrics, note that the wikipedia page on this topic is wonderful, but also a bit daunting. I frequently use it to remember which metric does what.
+
+        * Specifically, you saw how to calculate:
+
+        * Accuracy
+
+            * Accuracy is often used to compare models, as it tells us the proportion of observations we correctly labeled.
+
+            * ![metrics](./images/metrics38.png)
+
+            * Often accuracy is not the only metric you should be optimizing on. This is especially the case when you have class imbalance in your data. Optimizing on only accuracy can be misleading in how well your model is truly performing. With that in mind, you saw some additional metrics.
+
+        * Precision
+
+            * Precision focuses on the predicted "positive" values in your dataset. By optimizing based on precision values, you are determining if you are doing a good job of predicting the positive values, as compared to predicting negative values as positive.
+
+            * ![metrics](./images/metrics39.png)
+        
+        * Recall
+
+            * Recall focuses on the **actual** "positive" values in your dataset. By optimizing based on recall values, you are determining if you are doing a good job of predicting the positive values **without** regard of how you are doing on the **actual** negative values. If you want to perform something similar to recall on the actual 'negative' values, this is called specificity (TN / (TN + FP)).
+        
+        * F-Beta Score
+
+            * In order to look at a combination of metrics at the same time, there are some common techniques like the F-Beta Score (where the F1 score is frequently used), as well as the ROC and AUC. You can see that the β parameter controls the degree to which precision is weighed into the F score, which allows precision and recall to be considered simultaneously. The most common value for beta is 1, as this is where you are finding the harmonic average between precision and recall.
+
+            * ![metrics](./images/metrics40.png)
+
+        * ROC Curve & AUC (area under the curve)
+
+            * By finding different thresholds for our classification metrics, we can measure the area under the curve (where the curve is known as a ROC curve). Similar to each of the other metrics above, when the AUC is higher (closer to 1), this suggests that our model performance is better than when our metric is close to 0.
+
+            * ![metrics](./images/metrics41.png)
+
+            * You may end up choosing to optimize on any of these measures. I commonly end up using AUC or an F1 score in practice. However, there are always reason to choose one measure over another depending on your situation.
+    
+    * Regression Measures
+
+        * You want to measure how well your algorithms are performing on predicting numeric values? In these cases, there are three main metrics that are frequently used. mean absolute error, mean squared error, and r2 values.
+
+        * As an important note, optimizing on the mean absolute error may lead to a different 'best model' than if you optimize on the mean squared error. However, optimizing on the mean squared error will always lead to the same 'best' model as if you were to optimize on the r2 value.
+
+        * Again, if you choose a model with the best r2 value (the highest), it will also be the model that has the lowest (MSE). Choosing one versus another is based on which one you feel most comfortable explaining to someone else.
+
+        * Mean Absolute Error (MAE)
+
+            * The first metric you saw was the mean absolute error. This is a useful metric to optimize on when the value you are trying to predict follows a skewed distribution. Optimizing on an absolute value is particularly helpful in these cases because outliers will not influence models attempting to optimize on this metric as much as if you use the mean squared error. The optimal value for this technique is the median value. When you optimize for the R2 value of the mean squared error, the optimal value is actually the mean.
+
+            * ![metrics](./images/metrics42.png)
+        
+        * Mean-Squared Error (MSE)
+
+            * The mean squared error is by far the most used metric for optimization in regression problems. Similar to with MAE, you want to find a model that minimizes this value. This metric can be greatly impacted by skewed distributions and outliers. When a model is considered optimal via MAE, but not for MSE, it is useful to keep this in mind. In many cases, it is easier to actually optimize on MSE, as the a quadratic term is differentiable. However, an absolute value is not differentiable. This factor makes this metric better for gradient based optimization algorithms.
+
+            * ![metrics](./images/metrics43.png)
+        
+        * R2 Score
+
+            * Finally, the r2 value is another common metric when looking at regression values. Optimizing a model to have the lowest MSE will also optimize a model to have the the highest R2 value. This is a convenient feature of this metric. The R2 value is frequently interpreted as the 'amount of variability' captured by a model. Therefore, you can think of MSE, as the average amount you miss by across all the points, and the R2 value as the amount of the variability in the points that you capture with a model.
+
+            * ![metrics](./images/metrics44.png)
+    
+    * ![metrics](./images/metrics45.png)
+
+### Training and Tuning
+
+* Training and Tuning
+
+* 
