@@ -682,7 +682,6 @@
 
         * Note: This quiz requires you to find an accuracy of 100% on the training set. This is like memorizing the training data! A model designed to have 100% accuracy on training data is unlikely to generalize well to new data. If you pick very large values for your parameters, the model will fit the training set very well, but may not generalize well. Try to find the smallest possible parameters that do the job—then the model will be more likely to generalize well. (This aspect of the exercise won't be graded.)
 
-
 ### Naive Bayes
 
 * Naive Bayes
@@ -757,7 +756,7 @@
 
     * Check the `naive_bayes_lab` for more examples
 
-    * One of the major advantages that Naive Bayes has over other classification algorithms is its ability to handle an extremely large number of features. In our case, each word is treated as a feature and there are thousands of different words. Also, it performs well even with the presence of irrelevant features and is relatively unaffected by them. The other major advantage it has is its relative simplicity. Naive Bayes' works well right out of the box and tuning it's parameters is rarely ever necessary, except usually in cases where the distribution of the data is known. It rarely ever overfits the data. Another important advantage is that its model training and prediction times are very fast for the amount of data it can handle. All in all, Naive Bayes' really is a gem of an algorithm!
+    * One of the major advantages that Naive Bayes has over other classification algorithms its the ability to handle an extremely large number of features. In our case, each word is treated as a feature and there are thousands of different words. Also, it performs well even with the presence of irrelevant features and is relatively unaffected by them. The other major advantage is its relative simplicity. Naive Bayes' works well right out of the box and tuning it's parameters is rarely ever necessary, except usually in cases where the distribution of the data is known. It rarely ever overfits the data. Another important advantage is that its model training and prediction times are very fast for the amount of data it can handle. All in all, Naive Bayes' really is a gem of an algorithm!
 
 ### Support Vector Machines (SVMs)
 
@@ -1492,4 +1491,121 @@
 
 * Training and Tuning
 
-* 
+* ![tuning](./images/tuning1.png)
+
+* ![tuning](./images/tuning2.png)
+
+* ![tuning](./images/tuning3.png)
+
+* ![tuning](./images/tuning4.png)
+
+* ![tuning](./images/tuning5.png)
+
+* ![tuning](./images/tuning6.png)
+
+* ![tuning](./images/tuning7.png)
+
+* Model Complexity
+
+    * ![tuning](./images/tuning8.png) 
+
+    * ![tuning](./images/tuning9.png)
+
+    * ![tuning](./images/tuning10.png)
+
+    * ![tuning](./images/tuning11.png)
+
+        * This is a model complexity graph
+
+        * The model in the middle generalized better for both test and training data. The model on the left failed on both test and training (high bias - underfit), and the model on the right is working on the training data and failing on testing (high variance - overfiting)
+    
+    * ![tuning](./images/tuning12.png)
+
+    * ![tuning](./images/tuning13.png)
+        * A polynomial of degree 2 had the best result overall
+    
+* Cross Validation
+
+    * ![tuning](./images/tuning14.png)
+        * The Cross Validation set (or just validation) will be used during training so we can adjust the degree of our polynomial during training.
+    
+    * ![tuning](./images/tuning15.png)
+
+    * ![tuning](./images/tuning16.png)
+
+* K-fold cross validation
+
+    * ![tuning](./images/tuning18.png)
+
+        * A way to use your training and test data more efficiently is to break it in K buckets. In this case we are breaking it into 4. 
+
+    * ![tuning](./images/tuning17.png)
+
+        * Now we can train our model K times (4 in this case), each time using a different bucket as our testing set and the remaining point as the training set.
+
+    * ![tuning](./images/tuning19.png)
+
+        * Size of the data = 12
+        * Size of the testing set = 3
+
+    * ![tuning](./images/tuning20.png)
+
+    * ![tuning](./images/tuning21.png)
+
+* Learning Curves
+
+    * ![tuning](./images/tuning23.png)
+
+    * ![tuning](./images/tuning22.png)
+
+    * ![tuning](./images/tuning24.png)
+
+    * ![tuning](./images/tuning25.png)
+
+    * ![tuning](./images/tuning26.png)
+
+    * ![tuning](./images/tuning27.png)
+
+
+* Grid Search
+
+    * ![tuning](./images/tuning28.png)
+
+    * ![tuning](./images/tuning29.png)
+
+    * ![tuning](./images/tuning30.png)
+
+    * ![tuning](./images/tuning31.png)
+
+    * Grid Search in sklearn
+
+        * Grid Search in sklearn is very simple. We'll illustrate it with an example. Let's say we'd like to train a support vector machine, and we'd like to decide between the following parameters:
+
+        * `kernel: poly or rbf.`
+        
+        * `C: 0.1, 1, or 10.`
+
+        * ```python
+            from sklearn.model_selection import GridSearchCV
+
+            parameters = {'kernel':['poly', 'rbf'],'C':[0.1, 1, 10]}
+
+            from sklearn.metrics import make_scorer
+            from sklearn.metrics import f1_score
+            scorer = make_scorer(f1_score)
+
+            # Create the object.
+            grid_obj = GridSearchCV(clf, parameters, scoring=scorer)
+            # Fit the data
+            grid_fit = grid_obj.fit(X, y)
+
+            best_clf = grid_fit.best_estimator_
+            ```
+        
+        * Now you can use this estimator best_clf to make the predictions.
+
+        * Check `grid_search_lab` for a full example
+
+## Deep Learning with TensorFlow
+
+* Check labs inside `tensorflow_lab`
