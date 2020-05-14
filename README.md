@@ -1609,3 +1609,415 @@
 ## Deep Learning with TensorFlow
 
 * Check labs inside `tensorflow_lab`
+
+### Lesson 3
+
+* Before we get started, let's take a quick look at what will be covered in this course on unsupervised learning.
+
+* Unsupervised learning is all about understanding how to group our data when we either
+
+* `1.` Do not have a label to predict. An example of this is using an algorithm to look at brain scans to find areas that may raise concern. You don't have labels on the images to understand what areas might raise reason for concern, but you can understand which areas are most similar or different from one another.
+
+* `2.` Are not trying to predict a label, but rather group our data together for some other reason! One example of this is when you have tons of data, and you would like to condense it down to a fewer number of features to be used.
+
+* With that in mind, here are the topics for this lesson:
+
+    * Clustering
+
+        * Clustering is one of the most popular unsupervised approaches. In a first look at clustering, you will gain an understanding of what clustering your data means. Then, you will see how the k-means algorithm works. You will put your skills to work to find groupings of similar movies!
+
+    * Hierarchical and Density Based Clustering
+
+        * Another set of clustering algorithms takes an approach of using density based 'closeness' measures. At the end of the lesson, you will see how this can be used in traffic classification, as well as in anomaly detection (finding points that aren't like others in your dataset).
+    
+    * Gaussian Mixture Models and Cluster Validation
+
+        * To extend the density based approaches, you will get some practice with gaussian mixture models. This technique is not far from what you learned in the previous lesson, and it is the last of the clustering algorithms you will learn before moving to matrix decomposition methods.
+
+    * Principal Component Analysis
+
+        * Principal component analysis is one of the most popular decomposition methods available today. In this lesson, you will learn how matrix decomposition methods work conceptually. Then you will apply principal component analysis to images of handwritten digits to reduce the dimensionality of these images.
+
+    * Random Projection and Independent Component Analysis
+
+        * Another way to decompose data is through independent component analysis. In this lesson, you will see how this method can pull apart audio related to a piano, cello, and television that has been overlaid in the same file.
+
+### Clustering
+
+* ![clustering](./images/clustering.png) 
+
+* ![clustering](./images/clustering1.png) 
+
+* k-Means use cases
+
+    * Cluster books and authors that are similar, which helps identify anonymous authors
+
+    * It is also used to cluster similar movies and music
+
+    * Cluster customer behaviour. Recommend items based on customer habits 
+
+* How it works: k-Means
+
+    * In k-Means we group the points closes to one another together into k groups. In the case bellow k = 2 (one representing going to work, another representing going to parents house)
+
+    * ![clustering](./images/clustering2.png)  
+
+* Elbow Method for Finding K
+
+    * ![clustering](./images/clustering3.png)
+    
+    * ![clustering](./images/clustering4.png)
+
+    * This method tries variations of K and measures the average distance of each point from the center point of the cluster.
+
+    * ![clustering](./images/clustering5.png)
+
+    * ![clustering](./images/clustering6.png)
+
+        * We want to find the "Elbow" of the curve. This is the best K number of clusters.
+    
+    * Check the `Changing K - Solution` lab
+        * Once you have fit a kmeans model to some data in sklearn, there is a score method, which takes the data. This score is an indication of how far the points are from the centroids.
+
+* How do we build an algorithm to determine where the clusters centers are?
+
+    * ![clustering](./images/clustering7.png) 
+
+        * We start K means by randomly placing K points to our plot. Those points are called **centroids**. Now we need to set each point of our dataset to the closest centroid. 
+
+    * ![clustering](./images/clustering8.png)
+
+        * Now that we know which points belong to which group, we move the centroid to the center of this points.
+
+        * After that, we recalculate (reassign) all points distance to the centroids.
+    
+    * ![clustering](./images/clustering9.png)
+
+    * ![clustering](./images/clustering10.png)
+
+        * We should run K-means with different sets of centroids.
+    
+    * ![clustering](./images/clustering11.png)
+
+        * The best grouping is the one if smallest average distance between the point and the centroid.
+
+* Feature scaling
+
+    * ![clustering](./images/clustering12.png)
+
+        * We usually use standardizing with clustering algorithms, as well as with transformations like PCA and ICA.
+    
+    * ![clustering](./images/clustering13.png)
+
+        * We use normalizing when scaling the color of an image.
+    
+    * ![clustering](./images/clustering14.png)
+
+        * If you do not scale your features, the features with much larger variance will dominate the importance in clustering. Even if it is just because of the choice of unity
+    
+    * ![clustering](./images/clustering15.png)
+
+    * ![clustering](./images/clustering16.png)
+
+    * ![clustering](./images/clustering17.png)
+
+        * This is an example of how feature scaling may change the final clusters determined by a model. For this reason, it is important to standardize your data before clustering
+    
+    * Check the clustering_lab folder for examples.
+
+* Recap
+
+    * Clustering
+        * You learned about clustering, a popular method for unsupervised machine learning. We looked at three ways to identify clusters in your dataset.
+
+            * `Visual Inspection`  of your data.
+            * `Pre-conceived` ideas of the number of clusters.
+            * `The elbow method`, which compares the average distance of each point to the cluster center for different numbers of centers.
+    
+    * K-Means
+        * You saw the k-means algorithm for clustering data, which has 3 steps:
+
+            1. Randomly place k-centroids amongst your data.
+
+                * Then repeat the following two steps until convergence (the centroids don't change):
+
+            2. Look at the distance from each centroid to each point. Assign each point to the closest centroid.
+
+            3. Move the centroid to the center of the points assigned to it.
+    
+    * Concerns with K-Means
+        
+        * Finally, we discussed some concerns with the k-means algorithm. These concerns included:
+
+        1. Concern: The random placement of the centroids may lead to non-optimal solutions.
+
+        * Solution: **Run the algorithm multiple times** and choose the centroids that create the smallest average distance of the points to the centroids.
+
+        2. Concern: Depending on the scale of the features, you may end up with different groupings of your points.
+
+        * Solution: **Scale the features using Standardizing**, which will create features with mean 0 and standard deviation 1 before running the k-means algorithm.
+
+
+### Hierarchical and Density Based Clustering
+
+* k-Means are great of cases like this:
+    * Specially if you know the number of clusters before hand
+
+    * ![density_clustering](./images/density_clustering.png) 
+
+* What about a dataset like this:
+    * Do you think K-means would be able to find those clusters?
+
+    * ![density_clustering](./images/density_clustering2.png)  
+
+* ![density_clustering](./images/density_clustering3.png)
+    * K-means wouldn't be able to do that successfully 
+
+* K-means tend to work well in spherical datasets
+
+* ![density_clustering](./images/density_clustering4.png)
+
+* ![density_clustering](./images/density_clustering5.png)
+
+* Hierarchical Clustering
+
+    * Single-Link Clustering
+
+    * ![density_clustering](./images/density_clustering6.png)
+
+        * We calculate the distance between clusters to form a bigger one (example: yellow). As we form a bigger cluster, we connect it with other ones. Example: cluster 6 and 8. We connect 6 to 7 since it is more near compared to 8 to 7. 
+    
+    * ![density_clustering](./images/density_clustering7.png)
+
+    * ![density_clustering](./images/density_clustering8.png)
+
+    * ![density_clustering](./images/density_clustering9.png)
+
+    * ![density_clustering](./images/density_clustering10.png)
+
+    * `scikit-learn` doest no include Single Link Clustering as a package, but it is inside the Agglomerative Clustering package.
+
+        * ![density_clustering](./images/density_clustering11.png)
+
+
+    * Complete Link Clustering
+
+        * Different from Single Link, it looks for the furthest point between the clusters (not the closest).
+
+        * ![density_clustering](./images/density_clustering12.png)
+
+    * Average Link Clustering
+
+        * ![density_clustering](./images/density_clustering13.png)
+
+            * Looks at the distance between all points in the two clusters. The average of all the points will determine the next cluster.
+
+    * Ward's Method
+
+        * ![density_clustering](./images/density_clustering14.png)
+
+    * Implementation
+
+        * ![density_clustering](./images/density_clustering15.png)
+
+        * ![density_clustering](./images/density_clustering16.png)
+
+        * `Hierarchical Clustering Lab [SOLUTION]`
+
+    * Hierarchical Clustering Overview
+
+        * ![density_clustering](./images/density_clustering17.png)
+
+        * ![density_clustering](./images/density_clustering18.png)
+
+        * ![density_clustering](./images/density_clustering19.png)
+
+* Density-Based Clustering | DBSCAN
+
+    * ![density_clustering](./images/density_clustering20.png)
+
+        * We define an Epsilon to determine the radius of search for a cluster based on a point.
+
+    * ![density_clustering](./images/density_clustering21.png)
+
+        * If no other point lives in that radius, we can define it as "noise"
+
+    * ![density_clustering](./images/density_clustering22.png)
+
+        * We also tell the algorithm the minimum number of points that form a cluster (example: min 5). If we cannot find MinPts in the Epsilon radius that gets considered as noise as well
+    
+    * ![density_clustering](./images/density_clustering23.png)
+
+    * ![density_clustering](./images/density_clustering24.png)
+
+    * Implementation
+
+        * ![density_clustering](./images/density_clustering25.png)
+
+        * Check `DBSCAN Notebook [SOLUTION]` lab
+    
+    * ![density_clustering](./images/density_clustering26.png)
+
+        * For "Faces difficulty finding clusters of varying densities" we can use H-DBSCAN [Hierarchical density based clustering](https://www.researchgate.net/publication/315508524_hdbscan_Hierarchical_density_based_clustering) 
+    
+    * ![density_clustering](./images/density_clustering27.png)
+
+    * ![density_clustering](./images/density_clustering28.png)
+
+### Gaussian Mixture Models
+
+* Soft clustering algorithm
+
+    * Every point in the dataset will belong to every cluster that we have with different levels of membership. 
+
+    * ![gaussian](./images/gaussian.png)
+
+    * ![gaussian](./images/gaussian1.png)
+        * You define the membership based on the gaussian distribution
+    
+    * ![gaussian](./images/gaussian3.png)
+
+    * ![gaussian](./images/gaussian4.png)
+
+        * This is a gaussian distribution
+    
+    * ![gaussian](./images/gaussian5.png) 
+
+        * The gaussian distribution has a mean/average (the middle), one mean minus standard deviation, and one mean plus standard deviation
+    
+    * ![gaussian](./images/gaussian6.png)
+
+        * This dataset has two gaussian distributions. A model that contains two gaussians. Each gaussian is a cluster
+
+    * ![gaussian](./images/gaussian7.png)
+
+        * Since we have more than one variable, this is a multivariate gaussian distribution
+    
+    * ![gaussian](./images/gaussian8.png)
+
+        * The center is the mean, and the circle around it is the mean plus or minus the standard deviation
+
+    * Gaussian Mixture Model Clustering 
+
+    * ![gaussian](./images/gaussian9.png)
+
+    * ![gaussian](./images/gaussian10.png)
+        * We need to give a mean and a standard deviation for those K = 2 clusters.
+        * One way to do it is to set the values to the average and the mean of the entire dataset
+        * We could also run k-mean on the dataset, and use the clusters found by k-means to initialize the gaussian distribution
+        * For this example we will just make random points for the mean and the variance (standard deviation squared)
+    
+    * ![gaussian](./images/gaussian11.png)    
+        
+        * The membership of point 1 to cluster A will be calculated. `E[Z1A]` (1 is the point and A is the cluster, Z is a hidden/latent variable) 
+
+        * We are 99.97 percent share that Point 1 is part of Cluster A
+    
+    * ![gaussian](./images/gaussian12.png) 
+
+    * ![gaussian](./images/gaussian13.png) 
+
+        * The points in read have a strong membership with Cluster A, the points in green have a strong membership with Cluster B, and the gray points are half and half (50/50, 40/60)
+    
+    * ![gaussian](./images/gaussian14.png) 
+
+        * The next step is to use the membership calculations as a new parameter for the gaussians. We use step 2 input and fill out this small table
+    
+    * ![gaussian](./images/gaussian15.png) 
+
+    * ![gaussian](./images/gaussian16.png)
+
+        * The higher this number is, the more sure we are that the mixture model that we generated is responsible for creating the data / fits the dataset. We need to maximize this value
+
+    * Implementation
+
+        * ![gaussian](./images/gaussian17.png)
+    
+    * Overview 
+
+        * ![gaussian](./images/gaussian18.png)
+
+            * This clustering method is good for classifying documents, specially if a document is part of multiple topics or categories.
+            * A cluster can contain another cluster inside of it.
+            * Background subtraction
+        
+        * ![gaussian](./images/gaussian19.png)
+
+        * ![gaussian](./images/gaussian20.png)
+
+            * The first square is a static image, and the second is a video stream. We can use the video stream to understand the pixels that are maintained as the video progresses. With that learning we can apply those pixels to the image on the top.
+        
+        * ![gaussian](./images/gaussian21.png)
+
+        * ![gaussian](./images/gaussian22.png)
+
+            * We can subtract the background and get the moving objects from an image.
+
+* Cluster Analyses
+
+    * The first step is feature selection. We don't wanna throw all our columns to the cluster algorithm
+
+    * Feature extraction is transforming the data to generate novel features (PCA: principal component analyses)
+
+    * We have been using euclidean distance to determine how close to points are, but we can chance that when we select our clustering algorithm.
+
+        * Euclidean distance to determine how close two points are in a geometric sense
+
+        * If your data is document or word embeddings your distance will be the cos distance
+
+        * If your data is more of a gen expression type of data we would be using persons correlation
+    
+    * Cluster validation index
+
+        * ![gaussian](./images/gaussian23.png)
+    
+    * Cluster Validation
+
+        * The procedure of evaluating the results of a cluster objectively and quantitatively 
+
+    * Validation indices
+
+        * External indices
+            * This is the indice we use if the data was originally labelled
+            
+            * ![gaussian](./images/gaussian25.png)
+
+                * Range = Score Range
+                * Original labels and the labels resulting from the clustering
+
+            * ![gaussian](./images/gaussian26.png)
+
+            * ![gaussian](./images/gaussian27.png)
+
+            * ![gaussian](./images/gaussian28.png)
+
+        * Internal indices
+            * If the data that we have is not labelled 
+
+            * ![gaussian](./images/gaussian29.png)
+
+            * ![gaussian](./images/gaussian30.png)
+
+            * ![gaussian](./images/gaussian31.png)
+
+            * ![gaussian](./images/gaussian32.png)
+
+            * ![gaussian](./images/gaussian33.png)
+
+            * ![gaussian](./images/gaussian35.png)
+
+                * For DBScan we should never use silhouette coefficient 
+
+                * DBCV should be used
+            
+        * Relative indices
+            * Which of two clustering structures is better in some sense
+            
+        * All of those indices check for compactness and separability of clusters
+
+        * ![gaussian](./images/gaussian24.png)
+    
+    * Check `GMM Clustering and Cluster Validation Lab [SOLUTION]` for a full lab on cluster validation
+
+### Dimensionality Reduction and PCA
+
