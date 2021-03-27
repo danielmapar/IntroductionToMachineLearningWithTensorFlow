@@ -2021,3 +2021,6 @@
 
 ### Dimensionality Reduction and PCA
 
+* Here we will learn to transform data instead of clustering it.
+
+* The main ideas of PCA is to retain the informative parts of your data but with less of it.
