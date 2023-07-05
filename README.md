@@ -80,8 +80,6 @@
         * ![square_trick1](./images/square_trick_1.png)
 
         * Besides moving the slop `w1` horizontally (`p` value) we will also take `(q-q')` in order to account to the vertical axis
-
-        * ![exercise_square](./images/exercise_square.png) 
     
     * Gradient Descent
 
